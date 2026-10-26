@@ -515,8 +515,14 @@ input, textarea { caret-color: var(--cyan-ink); }
   .pillar-safety::before { top: -8px; left: 0; width: 13px; height: 13px; box-shadow: none; }
 }
 
+/* ---------- Alcance y clientes (entre Servicios y Contacto) ---------- */
+.presence { padding-block: 72px 80px; }
+
+@media (min-width: 900px) {
+  .presence { padding-block: 104px 112px; }
+}
+
 /* Alcance: una traza horizontal que conecta los países */
-.reach { margin-top: 80px; }
 
 .reach-title,
 .clients-title {
