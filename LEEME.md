@@ -34,6 +34,9 @@ Web3Forms (https://web3forms.com) funciona igual: `action="https://api.web3forms
 ## WhatsApp
 El botón flotante y el de la sección Contacto abren un chat con **+502 3741 9090**. Para cambiar el número, en `index.html` busque `wa.me/50237419090` (aparece 2 veces) y reemplace el número: código de país + número, sin espacios ni signos.
 
+## Al publicar una actualización
+En `index.html` suba el número `?v=` de `css/styles.css?v=3` y `js/main.js?v=3` (por ejemplo a `?v=4`). Así los teléfonos y navegadores descargan los archivos nuevos en lugar de mostrar la versión que tenían guardada.
+
 ## Cambios frecuentes
 - **Textos**: todos están en `index.html`.
 - **Correos y teléfonos**: sección `<!-- CONTACTO -->` de `index.html`.
