@@ -340,6 +340,17 @@ a { color: var(--cyan-ink); }
   .hero-nodes { display: none; }
 }
 
+/* Móvil: el mismo diagrama animado. main.js ajusta el viewBox y aquí se agrandan
+   las etiquetas para que se lean. Sin JS queda la lista simple. */
+@media (max-width: 899px) {
+  .js .hero-diagram { display: block; margin-top: 8px; }
+  .js .hero-nodes { display: none; }
+  .js .hero-diagram .nodes text { font-size: 44px; }
+  .js .hero-diagram .nodes circle { r: 15; }
+  .js .hero-diagram .nodes a:hover circle,
+  .js .hero-diagram .nodes a:focus-visible circle { r: 18; }
+}
+
 /* Diagrama */
 .hero-diagram .ln {
   stroke: var(--cyan);

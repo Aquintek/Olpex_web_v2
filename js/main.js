@@ -4,6 +4,16 @@
   var desktop = window.matchMedia('(min-width: 900px)');
   var reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
 
+  /* ---------- Diagrama del inicio: encuadre según el ancho ---------- */
+  // En móvil se amplía el área visible a la derecha para que quepan las etiquetas más grandes
+  var diagram = document.querySelector('.hero-diagram');
+
+  function fitDiagram() {
+    if (diagram) diagram.setAttribute('viewBox', desktop.matches ? '0 0 800 560' : '16 34 950 500');
+  }
+  fitDiagram();
+  desktop.addEventListener('change', fitDiagram);
+
   /* ---------- Menú móvil ---------- */
   var toggle = document.querySelector('.menu-toggle');
   var nav = document.getElementById('menu');
