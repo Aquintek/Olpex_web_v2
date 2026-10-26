@@ -193,7 +193,6 @@
 
   /* ---------- Clientes: tira en bucle ---------- */
   var marquee = document.querySelector('.marquee');
-  var marqueeToggle = document.querySelector('.marquee-toggle');
 
   if (marquee && !reducedMotion.matches) {
     var track = marquee.querySelector('.marquee-track');
@@ -207,13 +206,6 @@
     // Velocidad constante sin importar cuántos logos haya (≈ 45 px por segundo)
     marquee.style.setProperty('--marquee-duration', Math.round(track.scrollWidth / 2 / 45) + 's');
     marquee.classList.add('is-running');
-
-    marqueeToggle.hidden = false;
-    marqueeToggle.addEventListener('click', function () {
-      var paused = marquee.classList.toggle('is-paused');
-      marqueeToggle.setAttribute('aria-pressed', String(paused));
-      marqueeToggle.textContent = paused ? 'Reanudar' : 'Pausar';
-    });
   }
 
   /* ---------- Año del pie ---------- */
