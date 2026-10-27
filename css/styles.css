@@ -21,7 +21,7 @@
   --wide: 118%;
 
   --gutter: 16px;
-  --max: 1200px;
+  --max: 1360px;
   --header-h: 72px;
   --radius-s: 4px;
   --radius-m: 10px;
@@ -95,6 +95,10 @@ input, textarea { caret-color: var(--cyan-ink); }
 
 @media (min-width: 720px) {
   :root { --gutter: 32px; }
+}
+
+@media (min-width: 1200px) {
+  :root { --gutter: 48px; }
 }
 
 .skip-link {
@@ -960,7 +964,9 @@ input, textarea { caret-color: var(--cyan-ink); }
   margin-top: 28px;
 }
 
-@media (min-width: 640px) {
+/* Dos columnas solo cuando el panel ocupa todo el ancho (tableta); en escritorio el panel
+   va al lado del mapa y una columna deja ver correos completos */
+@media (min-width: 640px) and (max-width: 1023px) {
   .contact-form { grid-template-columns: 1fr 1fr; }
   .field-wide { grid-column: 1 / -1; }
 }
@@ -1063,6 +1069,22 @@ input, textarea { caret-color: var(--cyan-ink); }
 }
 
 .contact-list li { padding: 4px 0; overflow-wrap: anywhere; }
+
+/* Teléfonos agrupados por país: el código va en el subtítulo y los números quedan alineados */
+.phone-group + .phone-group { margin-top: 18px; }
+.phone-group h4 {
+  margin: 12px 0 0;
+  color: rgba(255, 255, 255, .86);
+  font-size: .9375rem;
+  font-weight: 600;
+}
+.phone-group h4 span { color: rgba(255, 255, 255, .62); font-weight: 400; }
+.phone-group .contact-list {
+  display: grid;
+  grid-template-columns: repeat(2, max-content);
+  column-gap: 28px;
+  margin-top: 4px;
+}
 .contact-list a {
   font-weight: 600;
   font-size: 1.125rem;
@@ -1070,7 +1092,7 @@ input, textarea { caret-color: var(--cyan-ink); }
   text-decoration: none;
 }
 .contact-list a:hover { text-decoration: underline; }
-.muted { color: rgba(255, 255, 255, .62); font-size: .9375rem; }
+
 
 .btn-whatsapp {
   background: var(--wa);
