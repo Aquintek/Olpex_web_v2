@@ -21,7 +21,7 @@
   --wide: 118%;
 
   --gutter: 16px;
-  --max: 1200px;
+  --max: 1360px;
   --header-h: 72px;
   --radius-s: 4px;
   --radius-m: 10px;
@@ -95,6 +95,10 @@ input, textarea { caret-color: var(--cyan-ink); }
 
 @media (min-width: 720px) {
   :root { --gutter: 32px; }
+}
+
+@media (min-width: 1200px) {
+  :root { --gutter: 48px; }
 }
 
 .skip-link {
@@ -515,73 +519,19 @@ input, textarea { caret-color: var(--cyan-ink); }
   .pillar-safety::before { top: -8px; left: 0; width: 13px; height: 13px; box-shadow: none; }
 }
 
-/* ---------- Alcance y clientes (entre Servicios y Contacto) ---------- */
+/* ---------- Clientes (entre Servicios y Contacto) ---------- */
 .presence { padding-block: 72px 80px; }
 
 @media (min-width: 900px) {
-  .presence { padding-block: 104px 112px; }
+  .presence { padding-block: 96px 104px; }
 }
 
-/* Alcance: una traza horizontal que conecta los países */
-
-.reach-title,
 .clients-title {
   font-size: clamp(1.375rem, 1.1rem + 1vw, 1.75rem);
   font-weight: 720;
 }
 
-.reach-line {
-  list-style: none;
-  margin: 28px 0 0;
-  padding: 0 0 0 8px;
-  display: grid;
-  gap: 0;
-}
-
-.reach-line li {
-  position: relative;
-  padding: 10px 0 10px 28px;
-  font-size: 1.25rem;
-  font-weight: 650;
-  font-stretch: var(--wide);
-  border-left: 4px solid var(--cyan);
-}
-
-.reach-line li::before {
-  content: "";
-  position: absolute;
-  left: -12px;
-  top: 50%;
-  width: 20px;
-  height: 20px;
-  margin-top: -10px;
-  border-radius: 50%;
-  background: var(--paper);
-  border: 4px solid var(--cyan);
-}
-
-.reach-line li:first-child { border-left-color: transparent; background: linear-gradient(var(--cyan), var(--cyan)) -4px 50% / 4px 50% no-repeat; }
-.reach-line li:last-child { border-left-color: transparent; background: linear-gradient(var(--cyan), var(--cyan)) -4px 0 / 4px 50% no-repeat; }
-
-@media (min-width: 720px) {
-  .reach-line {
-    grid-template-columns: repeat(4, 1fr);
-    padding: 0;
-  }
-  .reach-line li,
-  .reach-line li:first-child,
-  .reach-line li:last-child {
-    padding: 36px 16px 0 0;
-    border-left: 0;
-    background: linear-gradient(var(--cyan), var(--cyan)) 0 8px / 100% 4px no-repeat;
-  }
-  .reach-line li:first-child { background-position: 10px 8px; }
-  .reach-line li:last-child { background-size: 10px 4px; }
-  .reach-line li::before { left: 0; top: 0; margin-top: 0; }
-}
-
-/* Clientes: tira de logos en bucle, de izquierda a derecha */
-.clients { margin-top: 80px; }
+/* Tira de logos en bucle, de izquierda a derecha */
 
 .marquee {
   margin-top: 28px;
@@ -853,9 +803,11 @@ input, textarea { caret-color: var(--cyan-ink); }
 
 .contact a { color: var(--cyan-light); }
 
+/* Móvil: encabezado, mapa, formulario y datos, en ese orden.
+   Escritorio: mapa y datos a la izquierda, formulario a la derecha. */
 .contact-grid {
   display: grid;
-  gap: 56px;
+  gap: 40px;
 }
 
 .contact-lead {
@@ -865,18 +817,156 @@ input, textarea { caret-color: var(--cyan-ink); }
   font-size: 1.1875rem;
 }
 
-@media (min-width: 960px) {
+.contact-head .btn-whatsapp { margin-top: 28px; }
+
+@media (min-width: 1024px) {
   .contact { padding-block: 104px 112px; }
-  .contact-grid { grid-template-columns: 7fr 4fr; gap: 80px; }
+  .contact-grid {
+    grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
+    grid-template-areas:
+      "head  panel"
+      "map   panel"
+      "info  panel";
+    grid-template-rows: auto auto 1fr;
+    gap: 40px 64px;
+  }
+  .contact-head { grid-area: head; }
+  .coverage { grid-area: map; }
+  /* El formulario acompaña al lector mientras recorre el mapa */
+  .contact-panel {
+    grid-area: panel;
+    align-self: start;
+    position: sticky;
+    top: calc(var(--header-h) + 24px);
+  }
+  .contact-info { grid-area: info; }
 }
+
+/* Mapa de cobertura */
+.coverage {
+  position: relative;
+  margin: 0;
+}
+
+.coverage-map { display: block; width: 100%; height: auto; }
+
+/* Toda América en cian; la sede en Guatemala en amarillo de seguridad */
+.map-dots .dots-cover { stroke: var(--cyan); stroke-width: 4.4; }
+.map-dots .dots-hq { stroke: var(--safety); stroke-width: 5; }
+
+.map-hq .hq-trace { stroke: var(--safety); stroke-width: 3; stroke-linecap: round; stroke-linejoin: round; }
+.map-hq .hq-node { fill: var(--safety); stroke: var(--navy); stroke-width: 3; }
+.map-hq .hq-pulse {
+  fill: none;
+  stroke: var(--safety);
+  stroke-width: 2.5;
+  opacity: 0;
+  transform-box: fill-box;
+  transform-origin: center;
+}
+
+.map-hq .hq-label {
+  fill: #fff;
+  font-family: var(--font);
+  font-size: 22px;
+  font-weight: 720;
+  font-stretch: var(--wide);
+  paint-order: stroke;
+  stroke: var(--navy);
+  stroke-width: 6px;
+  stroke-linejoin: round;
+}
+
+.coverage-caption { margin-top: 20px; }
+.coverage-caption h3 { font-size: 1.125rem; font-weight: 720; }
+
+.coverage-legend {
+  list-style: none;
+  margin: 10px 0 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 24px;
+  color: rgba(255, 255, 255, .86);
+  font-size: .9375rem;
+}
+.coverage-legend li { display: flex; align-items: center; gap: 10px; }
+.coverage-legend li::before {
+  content: "";
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--cyan);
+}
+.coverage-legend .legend-hq::before { background: var(--safety); }
+
+/* En pantallas medianas y grandes la leyenda ocupa el océano Pacífico, junto a Sudamérica */
+@media (min-width: 640px) {
+  .coverage-caption {
+    position: absolute;
+    left: 0;
+    bottom: 6%;
+    max-width: 40%;
+    margin: 0;
+  }
+  .coverage-legend { flex-direction: column; }
+}
+
+/* Móvil: etiqueta más grande para que se lea al reducir el mapa */
+@media (max-width: 639px) {
+  .map-hq .hq-label { font-size: 26px; stroke-width: 7px; }
+}
+
+/* Al llegar a la sección se dibuja la traza de la sede y su anillo late suavemente
+   (main.js agrega .is-drawn) */
+@media (prefers-reduced-motion: no-preference) {
+  .js .map-hq .hq-trace { stroke-dasharray: 1; stroke-dashoffset: 1; }
+  .js .map-hq .hq-label { opacity: 0; }
+
+  .js .coverage.is-drawn .hq-trace { animation: draw .7s cubic-bezier(.6, 0, .2, 1) .2s forwards; }
+  .js .coverage.is-drawn .hq-label { animation: node-in .35s ease-out .8s forwards; }
+  .js .coverage.is-drawn .hq-pulse { animation: hq-pulse 2.6s cubic-bezier(.2, .6, .3, 1) 1s infinite; }
+}
+
+@keyframes hq-pulse {
+  from { opacity: .9; transform: scale(1); }
+  to { opacity: 0; transform: scale(3.2); }
+}
+
+/* Panel del formulario: el azul de la presentación sobre el marino */
+.contact-panel {
+  padding: 28px 20px 24px;
+  border-radius: var(--radius-m);
+  background: var(--blue);
+  box-shadow: 0 24px 48px -24px rgba(3, 12, 26, .6);
+}
+
+.panel-title {
+  font-size: clamp(1.375rem, 1.15rem + .9vw, 1.75rem);
+  font-weight: 760;
+}
+
+.panel-lead {
+  margin-top: 10px;
+  max-width: 30em;
+  color: rgba(255, 255, 255, .9);
+}
+
+@media (min-width: 640px) {
+  .contact-panel { padding: 40px 36px 32px; }
+}
+
+.contact-panel .btn-solid:hover { background: var(--navy-deep); }
 
 .contact-form {
   display: grid;
   gap: 4px 20px;
-  margin-top: 36px;
+  margin-top: 28px;
 }
 
-@media (min-width: 640px) {
+/* Dos columnas solo cuando el panel ocupa todo el ancho (tableta); en escritorio el panel
+   va al lado del mapa y una columna deja ver correos completos */
+@media (min-width: 640px) and (max-width: 1023px) {
   .contact-form { grid-template-columns: 1fr 1fr; }
   .field-wide { grid-column: 1 / -1; }
 }
@@ -891,7 +981,7 @@ input, textarea { caret-color: var(--cyan-ink); }
   font-size: .9375rem;
 }
 
-.optional { font-weight: 400; color: rgba(255, 255, 255, .7); }
+.optional { font-weight: 400; color: rgba(255, 255, 255, .82); }
 
 .field input,
 .field select,
@@ -933,7 +1023,7 @@ input, textarea { caret-color: var(--cyan-ink); }
 .field-error {
   min-height: 1.5em;
   margin-top: 4px;
-  color: #FFB4A8;
+  color: #FFD6CF;
   font-size: .875rem;
 }
 
@@ -955,10 +1045,18 @@ input, textarea { caret-color: var(--cyan-ink); }
 
 .form-status { max-width: 32em; }
 .form-status.is-ok { color: #9BE7B8; font-weight: 600; }
-.form-status.is-error { color: #FFB4A8; }
+.form-status.is-error { color: #FFD6CF; }
+
+.contact-info {
+  display: grid;
+  gap: 28px 40px;
+}
+
+@media (min-width: 560px) {
+  .contact-info { grid-template-columns: auto auto; justify-content: start; }
+}
 
 .contact-info h3 {
-  margin-top: 36px;
   font-size: 1rem;
   font-weight: 700;
   color: rgba(255, 255, 255, .7);
@@ -971,6 +1069,22 @@ input, textarea { caret-color: var(--cyan-ink); }
 }
 
 .contact-list li { padding: 4px 0; overflow-wrap: anywhere; }
+
+/* Teléfonos agrupados por país: el código va en el subtítulo y los números quedan alineados */
+.phone-group + .phone-group { margin-top: 18px; }
+.phone-group h4 {
+  margin: 12px 0 0;
+  color: rgba(255, 255, 255, .86);
+  font-size: .9375rem;
+  font-weight: 600;
+}
+.phone-group h4 span { color: rgba(255, 255, 255, .62); font-weight: 400; }
+.phone-group .contact-list {
+  display: grid;
+  grid-template-columns: repeat(2, max-content);
+  column-gap: 28px;
+  margin-top: 4px;
+}
 .contact-list a {
   font-weight: 600;
   font-size: 1.125rem;
@@ -978,20 +1092,15 @@ input, textarea { caret-color: var(--cyan-ink); }
   text-decoration: none;
 }
 .contact-list a:hover { text-decoration: underline; }
-.muted { color: rgba(255, 255, 255, .62); font-size: .9375rem; }
+
 
 .btn-whatsapp {
-  width: 100%;
   background: var(--wa);
   color: var(--navy) !important;
   font-size: 1.0625rem;
 }
 .btn-whatsapp:hover { background: #4be08a; }
 .btn-whatsapp svg { width: 24px; height: 24px; }
-
-@media (min-width: 960px) {
-  .contact-info { padding-top: 12px; }
-}
 
 /* ---------- Pie ---------- */
 .site-footer {

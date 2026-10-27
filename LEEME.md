@@ -35,7 +35,7 @@ Web3Forms (https://web3forms.com) funciona igual: `action="https://api.web3forms
 El botón flotante y el de la sección Contacto abren un chat con **+502 3741 9090**. Para cambiar el número, en `index.html` busque `wa.me/50237419090` (aparece 2 veces) y reemplace el número: código de país + número, sin espacios ni signos.
 
 ## Al publicar una actualización
-En `index.html` suba el número `?v=` de `css/styles.css?v=4` y `js/main.js?v=4` (por ejemplo a `?v=5`). Así los teléfonos y navegadores descargan los archivos nuevos en lugar de mostrar la versión que tenían guardada.
+En `index.html` suba el número `?v=` de `css/styles.css?v=8` y `js/main.js?v=8` (por ejemplo a `?v=9`). Así los teléfonos y navegadores descargan los archivos nuevos en lugar de mostrar la versión que tenían guardada.
 
 ## Cambios frecuentes
 - **Textos**: todos están en `index.html`.
