@@ -665,6 +665,16 @@ input, textarea { caret-color: var(--cyan-ink); }
   cursor: pointer;
 }
 
+/* Icono de cada área: hereda el color del texto y se enciende en cian al estar activa */
+.svc-icon {
+  flex: none;
+  width: 24px;
+  height: 24px;
+  margin-right: 14px;
+  transition: color .15s ease;
+}
+.svc-tab[aria-expanded="true"] .svc-icon { color: var(--cyan-light); }
+
 /* Indicador abrir/cerrar en móvil */
 .svc-tab::after {
   content: "";
@@ -808,6 +818,7 @@ input, textarea { caret-color: var(--cyan-ink); }
     transition: transform .3s var(--ease-in-out), height .3s var(--ease-in-out);
   }
   .svc.is-instant .svc-indicator,
+  .svc.is-instant .svc-tab::after,
   .svc[data-input="key"] .svc-indicator { transition: none; }
 
   /* Dos piezas que se mueven juntas: el fondo va bajo el texto y el nodo sobre la traza

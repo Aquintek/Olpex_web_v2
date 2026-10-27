@@ -70,7 +70,8 @@
     svc.appendChild(el);
     return el;
   });
-  svc.classList.add('has-indicator');
+  // Sin transición al tomar el control: el nodo de la pestaña inicial no debe animarse al cargar
+  svc.classList.add('is-instant', 'has-indicator');
 
   function activeTab() {
     return tabs.filter(function (t) { return t.getAttribute('aria-expanded') === 'true'; })[0];
