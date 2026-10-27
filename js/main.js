@@ -208,6 +208,22 @@
     marquee.classList.add('is-running');
   }
 
+  /* ---------- Mapa de cobertura: las trazas se dibujan al llegar a la sección ---------- */
+  var coverage = document.querySelector('.coverage');
+
+  if (coverage) {
+    if ('IntersectionObserver' in window) {
+      var mapObserver = new IntersectionObserver(function (entries) {
+        if (!entries[0].isIntersecting) return;
+        coverage.classList.add('is-drawn');
+        mapObserver.disconnect();
+      }, { threshold: 0.35 });
+      mapObserver.observe(coverage);
+    } else {
+      coverage.classList.add('is-drawn');
+    }
+  }
+
   /* ---------- Año del pie ---------- */
   var year = document.querySelector('[data-year]');
   if (year) year.textContent = new Date().getFullYear();
