@@ -59,18 +59,63 @@
   }
 
   /* ---------- Servicios: índice-detalle (escritorio) / acordeón (móvil) ---------- */
+  var svc = document.querySelector('[data-svc]');
   var tabs = Array.prototype.slice.call(document.querySelectorAll('.svc-tab'));
 
+  // Fondo y nodo amarillo que se desplazan por la traza hasta la pestaña activa (solo escritorio)
+  var indicators = ['bg', 'dot'].map(function (part) {
+    var el = document.createElement('span');
+    el.className = 'svc-indicator svc-indicator-' + part;
+    el.setAttribute('aria-hidden', 'true');
+    svc.appendChild(el);
+    return el;
+  });
+  svc.classList.add('has-indicator');
+
+  function activeTab() {
+    return tabs.filter(function (t) { return t.getAttribute('aria-expanded') === 'true'; })[0];
+  }
+
+  // Se asigna transform y tamaño directamente al indicador para no recalcular toda la sección
+  function placeIndicator(animate) {
+    var tab = activeTab();
+    if (!tab || !desktop.matches) return;
+    if (!animate) svc.classList.add('is-instant');
+    indicators.forEach(function (el) {
+      el.style.width = tab.offsetWidth + 'px';
+      el.style.height = tab.offsetHeight + 'px';
+      el.style.transform = 'translateY(' + tab.offsetTop + 'px)';
+    });
+    if (!animate) {
+      void svc.offsetWidth; // aplica la posición antes de reactivar la transición
+      svc.classList.remove('is-instant');
+    }
+  }
+
   function openPanel(tab) {
+    var from = tabs.indexOf(activeTab());
+    // El contenido entra desde el lado hacia el que se movió la selección
+    svc.setAttribute('data-dir', from > tabs.indexOf(tab) ? 'up' : 'down');
     tabs.forEach(function (t) {
       var isTarget = t === tab;
       t.setAttribute('aria-expanded', String(isTarget));
       document.getElementById(t.getAttribute('aria-controls')).hidden = !isTarget;
     });
+    placeIndicator(true);
   }
 
+  placeIndicator(false);
+  // Se observan las pestañas y no la sección: su alto cambia con cada área y cortaría el desplazamiento
+  if ('ResizeObserver' in window) {
+    var tabsObserver = new ResizeObserver(function () { placeIndicator(false); });
+    tabs.forEach(function (t) { tabsObserver.observe(t); });
+  }
+  if (document.fonts) document.fonts.ready.then(function () { placeIndicator(false); });
+
   tabs.forEach(function (tab, i) {
-    tab.addEventListener('click', function () {
+    tab.addEventListener('click', function (e) {
+      // Con teclado (Enter/Espacio llegan con detail 0) el cambio es inmediato
+      svc.setAttribute('data-input', e.detail === 0 ? 'key' : 'pointer');
       var isOpen = tab.getAttribute('aria-expanded') === 'true';
       // En móvil se puede cerrar el área abierta; en escritorio siempre queda una visible
       if (isOpen && !desktop.matches) {
@@ -79,6 +124,10 @@
         return;
       }
       openPanel(tab);
+      // En móvil, al cerrarse un área de arriba la pestaña sube; se mantiene a la vista
+      if (!desktop.matches && tab.getBoundingClientRect().top < document.querySelector('.site-header').offsetHeight) {
+        tab.scrollIntoView({ behavior: reducedMotion.matches ? 'auto' : 'smooth', block: 'start' });
+      }
     });
 
     tab.addEventListener('keydown', function (e) {
@@ -89,6 +138,7 @@
       else if (e.key === 'End') next = tabs[tabs.length - 1];
       if (!next) return;
       e.preventDefault();
+      svc.setAttribute('data-input', 'key');
       next.focus();
       if (desktop.matches) openPanel(next);
     });
@@ -96,15 +146,15 @@
 
   // Al pasar a escritorio, asegurar que haya un área abierta
   desktop.addEventListener('change', function (e) {
-    if (e.matches && !tabs.some(function (t) { return t.getAttribute('aria-expanded') === 'true'; })) {
-      openPanel(tabs[0]);
-    }
+    if (e.matches && !activeTab()) openPanel(tabs[0]);
+    placeIndicator(false);
   });
 
   // Los nodos del inicio abren el área correspondiente
   function goToService(panelId) {
     var tab = tabs.filter(function (t) { return t.getAttribute('aria-controls') === panelId; })[0];
     if (!tab) return false;
+    svc.setAttribute('data-input', 'pointer');
     openPanel(tab);
     var target = desktop.matches ? document.getElementById('servicios') : tab;
     target.scrollIntoView({ behavior: reducedMotion.matches ? 'auto' : 'smooth', block: 'start' });

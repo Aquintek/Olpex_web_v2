@@ -41,6 +41,10 @@
   --header-h: 72px;
   --radius-s: 4px;
   --radius-m: 10px;
+
+  /* Curvas de movimiento: entradas rápidas y desplazamientos con aceleración natural */
+  --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
+  --ease-in-out: cubic-bezier(0.77, 0, 0.175, 1);
 }
 
 *,
@@ -673,7 +677,7 @@ input, textarea { caret-color: var(--cyan-ink); }
   border-right: 2.5px solid currentColor;
   border-bottom: 2.5px solid currentColor;
   transform: rotate(45deg);
-  transition: transform .2s ease;
+  transition: transform .2s var(--ease-out);
 }
 .svc-tab[aria-expanded="true"]::after { transform: rotate(-135deg); margin-top: -3px; }
 
@@ -741,7 +745,9 @@ input, textarea { caret-color: var(--cyan-ink); }
     color: rgba(255, 255, 255, .78);
     transition: color .15s ease, background-color .15s ease;
   }
-  .svc-tab:hover { color: #fff; background: rgba(255, 255, 255, .06); }
+  @media (hover: hover) and (pointer: fine) {
+    .svc-tab:hover { color: #fff; background: rgba(255, 255, 255, .06); }
+  }
 
   /* La traza vertical del índice y su nodo */
   .svc-tab::before {
@@ -787,8 +793,72 @@ input, textarea { caret-color: var(--cyan-ink); }
     grid-row: 1 / -1;
     padding: 0;
   }
-  .svc-panel:not([hidden]) { animation: panel-in .22s ease-out; }
+
+  /* Indicador del área activa (main.js lo crea): el fondo y el nodo amarillo viajan por
+     la traza hasta la pestaña elegida en lugar de saltar */
+  .svc { position: relative; isolation: isolate; }
+  .svc-tab { z-index: 1; }
+
+  .svc-indicator {
+    display: block;
+    position: absolute;
+    top: 0;
+    left: 0;
+    pointer-events: none;
+    transition: transform .3s var(--ease-in-out), height .3s var(--ease-in-out);
+  }
+  .svc.is-instant .svc-indicator,
+  .svc[data-input="key"] .svc-indicator { transition: none; }
+
+  /* Dos piezas que se mueven juntas: el fondo va bajo el texto y el nodo sobre la traza
+     (transform crea su propio apilamiento, por eso no pueden ir en un mismo elemento) */
+  .svc-indicator-bg {
+    z-index: 0;
+    border-radius: var(--radius-s);
+    background: rgba(7, 26, 51, .28);
+  }
+  .svc-indicator-dot { z-index: 2; }
+  .svc-indicator-dot::before {
+    content: "";
+    position: absolute;
+    left: 9px;
+    top: 50%;
+    width: 13px;
+    height: 13px;
+    margin-top: -6.5px;
+    border-radius: 50%;
+    background: var(--safety);
+  }
+
+  /* Con indicador, la pestaña activa ya no pinta su propio fondo ni su nodo */
+  .svc.has-indicator .svc-tab[aria-expanded="true"] { background: none; }
+  .svc.has-indicator .svc-tab[aria-expanded="true"]::after {
+    background: var(--blue);
+    box-shadow: inset 0 0 0 3px rgba(255, 255, 255, .55);
+  }
 }
+
+@media (max-width: 899px) {
+  .svc-indicator { display: none; }
+}
+
+/* El contenido del área entra por partes, desde el lado hacia el que se movió la selección.
+   Con teclado el cambio es inmediato: se recorre muchas veces seguidas. */
+@media (prefers-reduced-motion: no-preference) {
+  .js .svc-panel:not([hidden]) .svc-body > *,
+  .js .svc-panel:not([hidden]) > .photo {
+    animation: panel-in .28s var(--ease-out) both;
+  }
+  .js .svc-panel:not([hidden]) .svc-body > :nth-child(2) { animation-delay: .04s; }
+  .js .svc-panel:not([hidden]) .svc-body > :nth-child(3) { animation-delay: .08s; }
+  .js .svc-panel:not([hidden]) > .photo { animation-delay: .1s; }
+
+  .js .svc[data-input="key"] .svc-panel > *,
+  .js .svc[data-input="key"] .svc-body > * { animation: none; }
+}
+
+.svc { --panel-from: 8px; }
+.svc[data-dir="up"] { --panel-from: -8px; }
 
 @media (min-width: 1180px) {
   .svc-panel:not([hidden]) {
@@ -801,8 +871,8 @@ input, textarea { caret-color: var(--cyan-ink); }
 }
 
 @keyframes panel-in {
-  from { opacity: 0; transform: translateY(6px); }
-  to { opacity: 1; transform: none; }
+  from { opacity: 0; transform: translateY(var(--panel-from)); filter: blur(3px); }
+  to { opacity: 1; transform: none; filter: none; }
 }
 
 /* ---------- Contacto ---------- */
