@@ -828,7 +828,13 @@ input, textarea { caret-color: var(--cyan-ink); }
   }
   .contact-head { grid-area: head; }
   .coverage { grid-area: map; }
-  .contact-panel { grid-area: panel; align-self: start; }
+  /* El formulario acompaña al lector mientras recorre el mapa */
+  .contact-panel {
+    grid-area: panel;
+    align-self: start;
+    position: sticky;
+    top: calc(var(--header-h) + 24px);
+  }
   .contact-info { grid-area: info; }
 }
 
@@ -885,13 +891,13 @@ input, textarea { caret-color: var(--cyan-ink); }
 }
 .coverage-legend .legend-hq::before { background: var(--safety); }
 
-/* En pantallas medianas y grandes la leyenda ocupa el océano Pacífico del mapa */
+/* En pantallas medianas y grandes la leyenda ocupa el océano Pacífico, junto a Sudamérica */
 @media (min-width: 640px) {
   .coverage-caption {
     position: absolute;
     left: 0;
-    bottom: 4%;
-    max-width: 36%;
+    bottom: 6%;
+    max-width: 40%;
     margin: 0;
   }
   .coverage-legend { flex-direction: column; }
@@ -899,7 +905,7 @@ input, textarea { caret-color: var(--cyan-ink); }
 
 /* Móvil: etiquetas más grandes para que se lean al reducir el mapa */
 @media (max-width: 639px) {
-  .map-labels text { font-size: 30px; stroke-width: 8px; }
+  .map-labels text { font-size: 26px; stroke-width: 7px; }
 }
 
 /* Las trazas se dibujan desde Guatemala al llegar a la sección (main.js agrega .is-drawn) */
